@@ -93,26 +93,34 @@ const LandingPage = () => {
   };
 
   // Program details updated with Karaoke, Manga, and Pop Culture based on the PDF
-  const programDetails = [
+const programDetails = [
     {
       title: "JEUX VIDÉO",
       desc: "Des consoles en libre accès pour jouer librement dans une ambiance détendue et chill.",
-      time: "FREE PLAY"
+      time: "FREE PLAY",
+      // Gaming controller with neon lights
+      bgImage: "https://images.unsplash.com/photo-1675701299008-7958c985f955?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       title: "JEUX DE SOCIÉTÉ",
       desc: "Uno, Loup-Garou, Guess Up. Des jeux interactifs pour briser la glace et favoriser les échanges.",
-      time: "CO-OP / VERSUS"
+      time: "CO-OP / VERSUS",
+      // Dice and board games in dark aesthetic
+      bgImage: "https://images.unsplash.com/photo-1770160116616-2f7284d55f25?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       title: "ÉMISSION EN LIVE",
       desc: "Une édition spéciale de Checkpoint. Prenez la parole et débattez sur l'actu manga et pop culture !",
-      time: "TALK SHOW"
+      time: "TALK SHOW",
+      // Professional microphone with dark/neon background
+      bgImage: "https://images.unsplash.com/photo-1644767479973-a053733ef283?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     },
     {
       title: "KARAOKÉ & BLIND TEST",
       desc: "Chantez vos openings d'anime préférés et testez vos connaissances musicales et geeks.",
-      time: "CHALLENGE"
+      time: "CHALLENGE",
+      // Neon music vibe
+      bgImage: "https://images.unsplash.com/photo-1543148845-4b19c48482fd?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     }
   ];
 
@@ -180,30 +188,25 @@ const LandingPage = () => {
 <Box 
         sx={{ 
           position: 'relative',
-          // LEVIER 2 : On réduit la hauteur sur mobile (xs: 8 et 10) mais on garde grand sur PC (md: 12 et 16)
+          mt: { xs: '68px', md: '76px' }, 
+          
           pt: { xs: 8, md: 12 }, 
           pb: { xs: 10, md: 16 }, 
           px: 2,
           textAlign: 'center',
-          backgroundImage: `linear-gradient(rgba(19, 19, 19, 0.54), rgba(19, 19, 19, 0.95)), url(${heroBg})`,
+          backgroundImage: `linear-gradient(rgba(19, 19, 19, 0.57), rgba(19, 19, 19, 0.95)), url(${heroBg})`,
           backgroundSize: 'cover',
-          
-          // LEVIER 1 : Le point de focus. 
-          // 🛠️ À TOI DE JOUER ICI :
-          // Si les joueurs sont sur la gauche de la photo d'origine -> remplace par '30% center' ou 'left center'
-          // S'ils sont sur la droite -> remplace par '70% center' ou 'right center'
-          backgroundPosition: { xs: '20% center', md: 'center' },
-          
+          backgroundPosition: { xs: '70% center', md: 'center' },
           backgroundAttachment: { xs: 'scroll', md: 'fixed' },
         }}
       >
         <Container maxWidth="md">
           {/* Mockup Logo Container with Cyber Brackets */}
-          <Box sx={{ position: 'relative', display: 'inline-block', mb: 8, p: 3, backgroundColor: '#1A1A1A', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <Box sx={{ position: 'absolute', top: 0, left: 0, width: 20, height: 20, borderTop: '2px solid #9E1B1B', borderLeft: '2px solid #9E1B1B' }} />
-            <Box sx={{ position: 'absolute', bottom: 0, right: 0, width: 20, height: 20, borderBottom: '2px solid #9E1B1B', borderRight: '2px solid #9E1B1B' }} />
-            <Box component="img" src={logoImg} alt="Le Checkpoint Logo" sx={{ width: 140, display: 'block' }} />
-          </Box>
+          {/* <Box sx={{ position: 'relative', display: 'inline-block', mb: 8, p: 3, backgroundColor: '#1A1A1A', border: '1px solid rgba(255,255,255,0.05)' }}> */}
+            {/* <Box sx={{ position: 'absolute', top: 0, left: 0, width: 20, height: 20, borderTop: '2px solid #9E1B1B', borderLeft: '2px solid #9E1B1B' }} /> */}
+            {/* <Box sx={{ position: 'absolute', bottom: 0, right: 0, width: 20, height: 20, borderBottom: '2px solid #9E1B1B', borderRight: '2px solid #9E1B1B' }} /> */}
+            {/* <Box component="img" src={logoImg} alt="Le Checkpoint Logo" sx={{ width: 140, display: 'block' }} /> */}
+          {/* </Box> */}
 
           <Typography variant="h2" sx={{ mb: 3, color: '#fff', fontFamily: '"Space Grotesk", sans-serif', fontWeight: 700 }}>
             VOTRE NOUVELLE <span style={{ color: '#9E1B1B', textShadow: '0 0 20px rgba(158, 27, 27, 0.5)' }}>SAFE ZONE</span>
@@ -265,13 +268,29 @@ const LandingPage = () => {
           </Typography>
           <Grid container spacing={3}>
             {programDetails.map((prog, idx) => (
-              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={idx}>
+<Grid size={{ xs: 12, sm: 6, md: 3 }} key={idx}>
                 <Paper square sx={{ 
-                  p: 4, height: '100%', backgroundColor: '#1A1A1A', 
+                  p: 4, height: '100%', 
+                  
+                  // Reduced the opacity to 0.5 and 0.8 so the background image is clearly visible
+                  backgroundImage: `linear-gradient(rgba(19, 19, 19, 0.5), rgba(19, 19, 19, 0.8)), url(${prog.bgImage})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  
+                  // Fallback background color just in case the image takes time to load
+                  backgroundColor: '#1A1A1A', 
+                  
                   border: idx === 0 ? '1px solid #9E1B1B' : '1px solid rgba(255,255,255,0.1)', 
                   boxShadow: idx === 0 ? '0 0 15px rgba(158, 27, 27, 0.2)' : 'none',
                   transition: 'all 0.3s ease',
-                  '&:hover': { border: '1px solid #9E1B1B', boxShadow: '0 0 15px rgba(158, 27, 27, 0.4)' }
+                  
+                  // Highlight effect on hover
+                  '&:hover': { 
+                    border: '1px solid #9E1B1B', 
+                    boxShadow: '0 0 15px rgba(158, 27, 27, 0.4)',
+                    // Slight reveal effect on hover by making the gradient lighter
+                    backgroundImage: `linear-gradient(rgba(19, 19, 19, 0.3), rgba(19, 19, 19, 0.7)), url(${prog.bgImage})`
+                  }
                 }}>
                   <Typography variant="h6" sx={{ color: '#9E1B1B', fontSize: '0.85rem', mb: 2, fontFamily: '"Space Grotesk", sans-serif' }}>
                     ZONE 0{idx + 1}
@@ -303,10 +322,22 @@ const LandingPage = () => {
             <Typography variant="body1" sx={{ color: '#c6c6c7', mb: 4, fontSize: '1.125rem' }}>
               Un cadre privé spécialement aménagé pour la communauté. Une ambiance lumineuse tamisée, idéale pour créer du contenu esthétique, discuter autour d'un jeu de société, ou s'affronter sur console.
             </Typography>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+            <Box 
+              component="a" 
+              href="https://maps.app.goo.gl/DVrzFga4WMkCv8xc9?g_st=ic" 
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ 
+                display: 'flex', gap: 2, alignItems: 'flex-start', 
+                textDecoration: 'none', cursor: 'pointer',
+                // 👇 Petit effet visuel : le texte s'éclaire quand on passe la souris
+                '&:hover p': { color: '#fff' } 
+              }}
+            >
               <Typography sx={{ color: '#9E1B1B', fontSize: '1.5rem', lineHeight: 1 }}>⌖</Typography>
-              <Typography variant="body2" sx={{ color: '#c6c6c7', letterSpacing: '0.05em' }}>
-                Ruben House, Dakar<br/>Samedi 23 Mai
+              <Typography variant="body2" sx={{ color: '#c6c6c7', letterSpacing: '0.05em', transition: 'color 0.2s' }}>
+                Ruben House, Dakar<br/>Samedi 23 Mai<br/>
+                <span style={{ color: '#9E1B1B', fontSize: '0.8rem', textDecoration: 'underline' }}>Ouvrir dans Maps</span>
               </Typography>
             </Box>
           </Grid>
@@ -523,6 +554,17 @@ const LandingPage = () => {
             sx={{ color: '#c6c6c7', textDecoration: 'none', cursor: 'pointer', fontFamily: '"Space Grotesk", sans-serif', letterSpacing: '0.1em', '&:hover': { color: '#fff' } }}
           >
             FANG LA MARQUE
+          </Typography>
+
+          <Typography 
+            component="a" 
+            href="tel:221778791567" 
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="caption" 
+            sx={{ color: '#c6c6c7', textDecoration: 'none', cursor: 'pointer', fontFamily: '"Space Grotesk", sans-serif', letterSpacing: '0.1em', '&:hover': { color: '#fff' } }}
+          >
+            CONTACT : +221 77 879 15 67
           </Typography>
         </Box>
         <Typography variant="caption" sx={{ color: '#515050', fontFamily: '"Space Grotesk", sans-serif', letterSpacing: '0.1em' }}>
