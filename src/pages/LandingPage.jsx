@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Container, Box, Typography, TextField, Button, 
-  CircularProgress, Alert, Grid, Paper
+  CircularProgress, Alert, Grid, Paper,
+  IconButton, Menu, MenuItem, Fab, Fade
 } from '@mui/material';
 import { keyframes } from '@emotion/react';
 import axios from 'axios';
-// Import the katana logo from your assets
 import logoImg from '../assets/logo.jpeg'; 
+import heroBg from '../assets/images/hero-bg.PNG';
+import conceptImg from '../assets/images/concept-group.PNG';
+import spotImg from '../assets/images/spot-gaming.PNG';
+import transitionBg from '../assets/images/transition-bg.PNG';
+import MenuIcon from '@mui/icons-material/Menu';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 // --- CYBER-RONIN ANIMATIONS ---
 // Simulates a breathing neon light bloom
@@ -35,6 +41,33 @@ const LandingPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [qrCode, setQrCode] = useState(null);
+
+  // 👇 --- NOUVEAUX STATES POUR LE MENU ET LE SCROLL --- 👇
+  // Menu Burger
+  const [mobileAnchorEl, setMobileAnchorEl] = useState(null);
+  const isMobileMenuOpen = Boolean(mobileAnchorEl);
+  const handleMenuOpen = (event) => setMobileAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setMobileAnchorEl(null);
+
+  // Bouton Retour en haut
+  const [showScroll, setShowScroll] = useState(false);
+
+  useEffect(() => {
+    const checkScrollTop = () => {
+      if (!showScroll && window.pageYOffset > 400) {
+        setShowScroll(true);
+      } else if (showScroll && window.pageYOffset <= 400) {
+        setShowScroll(false);
+      }
+    };
+    window.addEventListener('scroll', checkScrollTop);
+    return () => window.removeEventListener('scroll', checkScrollTop);
+  }, [showScroll]);
+
+  const scrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  // 👆 ------------------------------------------------ 👆
 
   // Handle the form submission to your local backend
   const handlePurchase = async (e) => {
@@ -86,39 +119,82 @@ const LandingPage = () => {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: '#131313', pb: 10, overflowX: 'hidden' }}>
       
-      {/* NAVBAR */}
+{/* NAVBAR FIXE */}
       <Box sx={{ 
         borderBottom: '1px solid rgba(255,255,255,0.1)', py: 2, px: { xs: 2, md: 4 }, 
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        position: 'sticky', top: 0, zIndex: 50, backgroundColor: 'rgba(19, 19, 19, 0.9)', backdropFilter: 'blur(10px)'
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, // Passé en fixed et zIndex très haut
+        backgroundColor: 'rgba(19, 19, 19, 0.9)', backdropFilter: 'blur(10px)'
       }}>
         <Typography variant="h6" sx={{ color: '#fff', letterSpacing: '0px', fontFamily: '"Space Grotesk", sans-serif' }}>
           LE CHECKPOINT
         </Typography>
+
+        {/* Menu Desktop (Caché sur mobile) */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 4 }}>
           <Typography variant="body2" sx={{ cursor: 'pointer', fontWeight: 600, borderBottom: '2px solid #9E1B1B', color: '#fff' }} onClick={() => document.getElementById('concept').scrollIntoView({ behavior: 'smooth' })}>LE CONCEPT</Typography>
           <Typography variant="body2" sx={{ cursor: 'pointer', color: '#c6c6c7', transition: 'color 0.2s', '&:hover': { color: '#fff' } }} onClick={() => document.getElementById('program').scrollIntoView({ behavior: 'smooth' })}>PROGRAMME</Typography>
           <Typography variant="body2" sx={{ cursor: 'pointer', color: '#c6c6c7', transition: 'color 0.2s', '&:hover': { color: '#fff' } }} onClick={() => document.getElementById('arena').scrollIntoView({ behavior: 'smooth' })}>LE LIEU</Typography>
         </Box>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          size="small" 
-          onClick={() => document.getElementById('ticketing').scrollIntoView({ behavior: 'smooth' })}
-          sx={{ py: 1, px: 2, borderRadius: 0, '&:hover': { animation: `${glitch} 0.2s linear` } }}
-        >
-          S'INSCRIRE
-        </Button>
+
+        {/* Bouton Inscription + Burger Menu */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            size="small" 
+            onClick={() => document.getElementById('ticketing').scrollIntoView({ behavior: 'smooth' })}
+            sx={{ py: 1, px: 2, borderRadius: 0, '&:hover': { animation: `${glitch} 0.2s linear` } }}
+          >
+            S'INSCRIRE
+          </Button>
+
+          {/* Icône Burger (Visible uniquement sur mobile) */}
+          <IconButton 
+            onClick={handleMenuOpen}
+            sx={{ display: { xs: 'flex', md: 'none' }, color: '#fff' }}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Box>
       </Box>
 
+      {/* COMPOSANT MENU DÉROULANT MOBILE */}
+      <Menu
+        anchorEl={mobileAnchorEl}
+        open={isMobileMenuOpen}
+        onClose={handleMenuClose}
+        PaperProps={{
+          sx: { 
+            backgroundColor: '#1A1A1A', border: '1px solid rgba(255,255,255,0.1)', 
+            borderRadius: 0, mt: 1, width: '200px'
+          }
+        }}
+      >
+        <MenuItem onClick={() => { handleMenuClose(); document.getElementById('concept').scrollIntoView({ behavior: 'smooth' }); }} sx={{ color: '#fff', fontFamily: '"Space Grotesk", sans-serif' }}>LE CONCEPT</MenuItem>
+        <MenuItem onClick={() => { handleMenuClose(); document.getElementById('program').scrollIntoView({ behavior: 'smooth' }); }} sx={{ color: '#fff', fontFamily: '"Space Grotesk", sans-serif' }}>PROGRAMME</MenuItem>
+        <MenuItem onClick={() => { handleMenuClose(); document.getElementById('arena').scrollIntoView({ behavior: 'smooth' }); }} sx={{ color: '#fff', fontFamily: '"Space Grotesk", sans-serif' }}>LE LIEU</MenuItem>
+      </Menu>
+
       {/* HERO SECTION */}
-      <Box 
+<Box 
         sx={{ 
           position: 'relative',
-          pt: 12, pb: 16, px: 2,
+          // LEVIER 2 : On réduit la hauteur sur mobile (xs: 8 et 10) mais on garde grand sur PC (md: 12 et 16)
+          pt: { xs: 8, md: 12 }, 
+          pb: { xs: 10, md: 16 }, 
+          px: 2,
           textAlign: 'center',
-          backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
+          backgroundImage: `linear-gradient(rgba(19, 19, 19, 0.54), rgba(19, 19, 19, 0.95)), url(${heroBg})`,
+          backgroundSize: 'cover',
+          
+          // LEVIER 1 : Le point de focus. 
+          // 🛠️ À TOI DE JOUER ICI :
+          // Si les joueurs sont sur la gauche de la photo d'origine -> remplace par '30% center' ou 'left center'
+          // S'ils sont sur la droite -> remplace par '70% center' ou 'right center'
+          backgroundPosition: { xs: '20% center', md: 'center' },
+          
+          backgroundAttachment: { xs: 'scroll', md: 'fixed' },
         }}
       >
         <Container maxWidth="md">
@@ -150,7 +226,7 @@ const LandingPage = () => {
         </Container>
       </Box>
 
-      <Container maxWidth="lg" sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 12, md: 16 } }}>
+      <Container maxWidth="lg" sx={{ mt: { xs: 10, md: 16 }, display: 'flex', flexDirection: 'column', gap: { xs: 12, md: 16 } }}>
         
         {/* THE CONCEPT SECTION */}
         <Grid container spacing={8} sx={{ alignItems: 'center' }} id="concept">
@@ -165,16 +241,17 @@ const LandingPage = () => {
               Que vous soyez créateur de contenu, cosplayer, joueur passionné ou simplement amateur d'animes et de mangas, cet événement est pensé pour favoriser les échanges et la création de souvenirs dans un cadre chaleureux et sécurisé.
             </Typography>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
+<Grid size={{ xs: 12, md: 6 }}>
+            {/* C'est CE Box là (height: 350) qui avait sauté ! */}
             <Box sx={{ position: 'relative', height: 350, width: '100%' }}>
               <Box sx={{ position: 'absolute', top: 0, right: 0, width: 30, height: 30, borderTop: '2px solid #9E1B1B', borderRight: '2px solid #9E1B1B', zIndex: 10 }} />
               <Box sx={{ position: 'absolute', bottom: 0, left: 0, width: 30, height: 30, borderBottom: '2px solid #9E1B1B', borderLeft: '2px solid #9E1B1B', zIndex: 10 }} />
               <Box sx={{ 
                 width: '100%', height: '100%', 
                 backgroundColor: '#1A1A1A', 
-                backgroundImage: 'url("https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80")',
+                backgroundImage: `url(${conceptImg})`,
                 backgroundSize: 'cover', backgroundPosition: 'center',
-                filter: 'grayscale(100%) contrast(120%)',
+                filter: 'contrast(110%)',
                 border: '1px solid rgba(255,255,255,0.1)'
               }} />
             </Box>
@@ -229,24 +306,59 @@ const LandingPage = () => {
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
               <Typography sx={{ color: '#9E1B1B', fontSize: '1.5rem', lineHeight: 1 }}>⌖</Typography>
               <Typography variant="body2" sx={{ color: '#c6c6c7', letterSpacing: '0.05em' }}>
-                Ruben House, Dakar<br/>Samedi 18 Avril
+                Ruben House, Dakar<br/>Samedi 23 Mai
               </Typography>
             </Box>
           </Grid>
           <Grid size={{ xs: 12, md: 7 }}>
+            {/* Ici c'était height: 400 ! */}
             <Box sx={{ position: 'relative', height: 400, width: '100%' }}>
               <Box sx={{ position: 'absolute', bottom: -10, right: -10, width: 30, height: 30, borderBottom: '2px solid #9E1B1B', borderRight: '2px solid #9E1B1B', zIndex: 1 }} />
               <Box sx={{ 
                 width: '100%', height: '100%', 
                 backgroundColor: '#1A1A1A', 
-                backgroundImage: 'url("https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80")',
+                backgroundImage: `url(${spotImg})`,
                 backgroundSize: 'cover', backgroundPosition: 'center',
-                filter: 'grayscale(100%) contrast(120%)',
+                filter: 'contrast(110%)',
                 border: '1px solid rgba(255,255,255,0.1)'
               }} />
             </Box>
           </Grid>
         </Grid>
+
+        <Box 
+          sx={{ 
+            width: '100vw',
+            position: 'relative',
+            left: '50%',
+            right: '50%',
+            marginLeft: '-50vw',
+            marginRight: '-50vw',
+            mt: { xs: 12, md: 16 },
+            mb: { xs: 8, md: 12 },
+            py: { xs: 12, md: 18 },
+            textAlign: 'center',
+            backgroundImage: `linear-gradient(rgba(19, 19, 19, 0.7), rgba(19, 19, 19, 0.95)), url(${transitionBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: { xs: 'scroll', md: 'fixed' },
+            borderTop: '1px solid rgba(158, 27, 27, 0.3)',
+            borderBottom: '1px solid rgba(158, 27, 27, 0.3)',
+          }}
+        >
+          <Typography 
+            variant="h3" 
+            sx={{ 
+              color: '#fff', 
+              fontFamily: '"Space Grotesk", sans-serif', 
+              fontWeight: 700, 
+              letterSpacing: '0.05em',
+              textShadow: '0 0 20px rgba(0,0,0,0.8)'
+            }}
+          >
+            READY TO <span style={{ color: '#9E1B1B', textShadow: '0 0 15px rgba(158,27,27,0.5)' }}>PLAY ?</span>
+          </Typography>
+        </Box>
 
         {/* SECURE ACCESS (Ticketing System) */}
         <Box id="ticketing" sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
@@ -331,7 +443,7 @@ const LandingPage = () => {
                     required
                     value={attendeeName}
                     onChange={(e) => setAttendeeName(e.target.value)}
-                    placeholder="Ex: Modou Ndiaye"
+                    placeholder="Inscriptions prochainement"
                     sx={{
                       '& .MuiInput-root': {
                         color: '#fff', borderBottom: '2px solid rgba(255, 255, 255, 0.2)', pb: 1,
@@ -353,7 +465,7 @@ const LandingPage = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="hokage@konoha.com"
+                    placeholder="Inscriptions prochainement"
                     sx={{
                       '& .MuiInput-root': {
                         color: '#fff', borderBottom: '2px solid rgba(255, 255, 255, 0.2)', pb: 1,
@@ -370,7 +482,7 @@ const LandingPage = () => {
                   color="primary" 
                   size="large" 
                   fullWidth
-                  disabled={loading}
+                  disabled={true}
                   sx={{ 
                     animation: loading ? 'none' : `${neonPulse} 2s infinite`, 
                     height: 56, borderRadius: 0, fontFamily: '"Space Grotesk", sans-serif', fontSize: '1.1rem', letterSpacing: '0.1em',
@@ -388,16 +500,53 @@ const LandingPage = () => {
       {/* FOOTER */}
       <Box sx={{ borderTop: '1px solid rgba(255,255,255,0.1)', mt: 16, pt: 4, px: { xs: 2, md: 8 }, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 3 }}>
         <Typography variant="h6" sx={{ fontSize: '1rem', color: '#fff', fontFamily: '"Space Grotesk", sans-serif' }}>
-          OTAKU SENEGAL
+          LE CHECKPOINT
         </Typography>
-        <Box sx={{ display: 'flex', gap: { xs: 2, md: 4 } }}>
-          <Typography variant="caption" sx={{ color: '#c6c6c7', cursor: 'pointer', fontFamily: '"Space Grotesk", sans-serif', letterSpacing: '0.1em', '&:hover': { color: '#fff' } }}>MIND7 COMPANY</Typography>
-          <Typography variant="caption" sx={{ color: '#c6c6c7', cursor: 'pointer', fontFamily: '"Space Grotesk", sans-serif', letterSpacing: '0.1em', '&:hover': { color: '#fff' } }}>CONTACT</Typography>
+<       Box sx={{ display: 'flex', gap: { xs: 2, md: 4 } }}>
+          <Typography 
+            component="a" 
+            href="https://www.instagram.com/mind7company" 
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="caption" 
+            sx={{ color: '#c6c6c7', textDecoration: 'none', cursor: 'pointer', fontFamily: '"Space Grotesk", sans-serif', letterSpacing: '0.1em', '&:hover': { color: '#fff' } }}
+          >
+            MIND7 COMPANY
+          </Typography>
+
+          <Typography 
+            component="a" 
+            href="https://www.instagram.com/fanglamarque" 
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="caption" 
+            sx={{ color: '#c6c6c7', textDecoration: 'none', cursor: 'pointer', fontFamily: '"Space Grotesk", sans-serif', letterSpacing: '0.1em', '&:hover': { color: '#fff' } }}
+          >
+            FANG LA MARQUE
+          </Typography>
         </Box>
         <Typography variant="caption" sx={{ color: '#515050', fontFamily: '"Space Grotesk", sans-serif', letterSpacing: '0.1em' }}>
           © 2026 LE CHECKPOINT
         </Typography>
       </Box>
+      {/* BOUTON RETOUR EN HAUT */}
+      <Fade in={showScroll}>
+        <Fab 
+          onClick={scrollTop}
+          sx={{
+            position: 'fixed', 
+            bottom: { xs: 20, md: 40 }, 
+            right: { xs: 20, md: 40 }, 
+            zIndex: 1000,
+            backgroundColor: '#9E1B1B',
+            color: '#fff',
+            borderRadius: 0, // Design carré pour rester dans le thème Cyber
+            '&:hover': { backgroundColor: '#fff', color: '#9E1B1B' }
+          }}
+        >
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </Fade>
     </Box>
   );
 };
