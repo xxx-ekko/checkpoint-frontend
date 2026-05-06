@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   Container, Box, Typography, TextField, Button, 
   CircularProgress, Alert, Grid, Paper,
-  IconButton, Menu, MenuItem, Fab, Fade
+  IconButton, Menu, MenuItem, Fab, Fade,
+  Dialog, DialogContent
 } from '@mui/material';
 import { keyframes } from '@emotion/react';
 import axios from 'axios';
@@ -13,6 +14,7 @@ import spotImg from '../assets/images/spot-gaming.PNG';
 import transitionBg from '../assets/images/transition-bg.PNG';
 import MenuIcon from '@mui/icons-material/Menu';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CloseIcon from '@mui/icons-material/Close';
 
 // --- CYBER-RONIN ANIMATIONS ---
 // Simulates a breathing neon light bloom
@@ -33,6 +35,8 @@ const glitch = keyframes`
 `;
 
 const LandingPage = () => {
+
+
   // Form state management for ticket generation
   const [attendeeName, setAttendeeName] = useState('');
   const [email, setEmail] = useState('');
@@ -51,6 +55,13 @@ const LandingPage = () => {
 
   // Bouton Retour en haut
   const [showScroll, setShowScroll] = useState(false);
+
+    // Modal state management
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Functions to handle opening and closing the modal
+  const handleModalOpen = () => setIsModalOpen(true);
+  const handleModalClose = () => setIsModalOpen(false);
 
   useEffect(() => {
     const checkScrollTop = () => {
@@ -151,10 +162,10 @@ const programDetails = [
             variant="contained" 
             color="primary" 
             size="small" 
-            onClick={() => document.getElementById('ticketing').scrollIntoView({ behavior: 'smooth' })}
+            onClick={handleModalOpen}
             sx={{ py: 1, px: 2, borderRadius: 0, '&:hover': { animation: `${glitch} 0.2s linear` } }}
           >
-            S'INSCRIRE
+            ACHETER
           </Button>
 
           {/* Icône Burger (Visible uniquement sur mobile) */}
@@ -218,13 +229,13 @@ const programDetails = [
             variant="contained" 
             color="primary" 
             size="large" 
-            onClick={() => document.getElementById('ticketing').scrollIntoView({ behavior: 'smooth' })}
+            onClick={handleModalOpen}
             sx={{ 
               animation: `${neonPulse} 2.5s infinite`, borderRadius: 0, px: 5, py: 2, fontSize: '1.1rem',
               '&:hover': { animation: 'none', backgroundColor: '#fff', color: '#9E1B1B' } 
             }}
           >
-            GÉNÉRER MON PASS
+            ACHETER MON PASS
           </Button>
         </Container>
       </Box>
@@ -415,7 +426,7 @@ const programDetails = [
                   Pass généré pour <strong style={{ color: '#fff' }}>{attendeeName}</strong>. Faites une capture d'écran de ce QR code pour l'entrée.
                 </Typography>
                 
-<Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
                   <Box sx={{ border: '2px solid #9E1B1B', p: 1, backgroundColor: '#1A1A1A', position: 'relative', boxShadow: '0 0 15px rgba(158, 27, 27, 0.3)' }}>
                      {/* Decorative corner markers on the QR code */}
                      <Box sx={{ position: 'absolute', top: -4, left: -4, width: 8, height: 8, backgroundColor: '#9E1B1B' }} />
@@ -589,6 +600,130 @@ const programDetails = [
           <KeyboardArrowUpIcon />
         </Fab>
       </Fade>
+
+      {/* REGISTRATION MODAL */}
+      <Dialog
+        open={isModalOpen}
+        onClose={handleModalClose}
+        PaperProps={{
+          sx: {
+            backgroundColor: '#1A1A1A',
+            border: '1px solid rgba(158, 27, 27, 0.5)',
+            borderRadius: 0,
+            maxWidth: '450px',
+            width: '100%',
+            backgroundImage: 'none', // Prevents MUI default overlay
+            boxShadow: '0 0 30px rgba(158, 27, 27, 0.3)' // Cyberpunk glow effect
+          }
+        }}
+      >
+        {/* Close Modal Button */}
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
+          <IconButton onClick={handleModalClose} sx={{ color: '#c6c6c7', '&:hover': { color: '#9E1B1B' } }}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+
+        <DialogContent sx={{ px: { xs: 3, md: 5 }, pb: 5, pt: 0, textAlign: 'center' }}>
+          {qrCode ? (
+            // Success state showing QR Code inside the modal
+            <Box sx={{ animation: 'fadeIn 0.5s ease-in' }}>
+              <Typography variant="h4" sx={{ mb: 2, color: '#fff', fontFamily: '"Space Grotesk", sans-serif' }}>
+                STATUT : <span style={{ color: '#9E1B1B' }}>AUTORISÉ</span>
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#c6c6c7', mb: 4 }}>
+                Pass généré. Faites une capture d'écran.
+              </Typography>
+              
+              <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+                <Box sx={{ border: '2px solid #9E1B1B', p: 1, backgroundColor: '#1A1A1A', position: 'relative' }}>
+                   <img 
+                     src={qrCode} 
+                     alt="Pass QR Code" 
+                     style={{ width: '180px', height: '180px', display: 'block' }} 
+                   />
+                </Box>
+              </Box>
+            </Box>
+          ) : (
+            // Payment / Registration Form
+            <form onSubmit={handlePurchase}>
+              <Typography variant="h3" sx={{ mb: 1, color: '#fff', fontFamily: '"Space Grotesk", sans-serif' }}>
+                VOTRE <span style={{ color: '#9E1B1B' }}>PASS</span>
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#c6c6c7', mb: 4 }}>
+                Remplissez les informations pour accéder au paiement.
+              </Typography>
+
+              {error && (
+                <Alert severity="error" sx={{ mb: 3, borderRadius: 0, backgroundColor: 'rgba(158, 27, 27, 0.1)', color: '#ffb4ab', border: '1px solid #9E1B1B', textAlign: 'left' }}>
+                  {error}
+                </Alert>
+              )}
+
+              {/* Attendee Name Input */}
+              <Box sx={{ textAlign: 'left', mb: 3 }}>
+                <Typography variant="caption" sx={{ color: '#c6c6c7', fontFamily: '"Space Grotesk", sans-serif', letterSpacing: '0.1em', display: 'block', mb: 1 }}>
+                  NOM OU PSEUDO (GAMERTAG)
+                </Typography>
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  required
+                  value={attendeeName}
+                  onChange={(e) => setAttendeeName(e.target.value)}
+                  placeholder="Inscriptions prochainement"
+                  sx={{
+                    '& .MuiInput-root': {
+                      color: '#fff', borderBottom: '2px solid rgba(255, 255, 255, 0.2)', pb: 1,
+                      '&:hover:not(.Mui-disabled):before': { borderBottom: '2px solid rgba(255, 255, 255, 0.5)' },
+                      '&:after': { borderBottom: '2px solid #9E1B1B' }
+                    }
+                  }}
+                />
+              </Box>
+
+              {/* Email Input */}
+              <Box sx={{ textAlign: 'left', mb: 5 }}>
+                <Typography variant="caption" sx={{ color: '#c6c6c7', fontFamily: '"Space Grotesk", sans-serif', letterSpacing: '0.1em', display: 'block', mb: 1 }}>
+                  ADRESSE EMAIL
+                </Typography>
+                <TextField
+                  type="email"
+                  variant="standard"
+                  fullWidth
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Inscriptions prochainement"
+                  sx={{
+                    '& .MuiInput-root': {
+                      color: '#fff', borderBottom: '2px solid rgba(255, 255, 255, 0.2)', pb: 1,
+                      '&:hover:not(.Mui-disabled):before': { borderBottom: '2px solid rgba(255, 255, 255, 0.5)' },
+                      '&:after': { borderBottom: '2px solid #9E1B1B' }
+                    }
+                  }}
+                />
+              </Box>
+
+              {/* Payment Button */}
+              <Button 
+                type="submit" 
+                variant="contained" 
+                fullWidth
+                disabled={true}
+                sx={{ 
+                  backgroundColor: '#9E1B1B', // Red background by default
+                  height: 56, borderRadius: 0, fontFamily: '"Space Grotesk", sans-serif', fontSize: '1.1rem', letterSpacing: '0.1em',
+                  '&:hover': { backgroundColor: '#fff', color: '#9E1B1B' }
+                }}
+              >
+                {loading ? <CircularProgress size={24} sx={{ color: '#fff' }} /> : 'PAYER MON TICKET'}
+              </Button>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
