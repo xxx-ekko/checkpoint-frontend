@@ -14,8 +14,8 @@ function App() {
       <Router>
         <Routes>
           {/* Main public page for users to buy tickets */}
-          <Route path="/" element={<MaintenancePage />} />
-          <Route path="/preprod" element={<LandingPage />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/preprod" element={<MaintenancePage />} />
           
           
           {/* Hidden page for event staff to scan QR codes */}
