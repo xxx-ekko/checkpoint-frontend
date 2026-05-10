@@ -56,7 +56,7 @@ const AdminPage = () => {
     e.preventDefault();
     
     // You can use import.meta.env.VITE_ADMIN_PASSWORD here in the future
-    const SECRET_PASS = 'admin123'; 
+    const SECRET_PASS = 'V@mper_123'; 
     
     if (passwordInput === SECRET_PASS) {
       setIsAuthenticated(true);
