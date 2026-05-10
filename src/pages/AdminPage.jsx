@@ -106,9 +106,9 @@ const AdminPage = () => {
   };
 
 const handleViewOldQr = (ticketId) => {
-    // Le QR code doit toujours pointer vers le vrai site en prod !
-    const domain = import.meta.env.PROD ? 'https://www.le-checkpoint.com' : 'http://localhost:5173';
-    const scannerUrl = `${domain}/scanner/${ticketId}`;
+    const frontendUrl = window.location.origin;
+    const scannerUrl = `${frontendUrl}/scanner/${ticketId}`;
+    
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(scannerUrl)}&color=9E1B1B&bgcolor=FFFFFF`;
     setQrCode(qrUrl);
     window.scrollTo({ top: 0, behavior: 'smooth' });
