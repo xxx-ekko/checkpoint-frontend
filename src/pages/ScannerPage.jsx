@@ -12,6 +12,8 @@ const ScannerPage = () => {
   const [attendeeData, setAttendeeData] = useState(null);
   const [error, setError] = useState(null);
 
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
   useEffect(() => {
     // If someone manually goes to /scanner without an ID in the URL
     if (!ticketId) {
@@ -28,7 +30,7 @@ const ScannerPage = () => {
   const verifyTicketInfo = async () => {
     try {
       // Backend should check if ID exists. If yes, return data. If no, return 404.
-      const response = await axios.get(`http://localhost:8080/api/tickets/info/${ticketId}`);
+      const response = await axios.get(`${API_URL}/api/tickets/info/${ticketId}`);
       
       
       if (response.data.success) {

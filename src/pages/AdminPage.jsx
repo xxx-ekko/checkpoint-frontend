@@ -19,10 +19,12 @@ const AdminPage = () => {
   const [showTrash, setShowTrash] = useState(false);
   const [trashTickets, setTrashTickets] = useState([]);
 
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
   // --- API FUNCTIONS (Moved UP to avoid ReferenceError) ---
   const fetchRecentTickets = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/admin/recent-tickets');
+      const response = await axios.get(`${API_URL}/api/admin/recent-tickets`);
       if (response.data.success) {
         setRecentTickets(response.data.tickets);
       }
@@ -33,7 +35,7 @@ const AdminPage = () => {
 
   const fetchTrashTickets = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/admin/trash-tickets');
+      const response = await axios.get(`${API_URL}/api/admin/trash-tickets`);
       if (response.data.success) {
         setTrashTickets(response.data.tickets);
       }
@@ -55,8 +57,7 @@ const AdminPage = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     
-    // You can use import.meta.env.VITE_ADMIN_PASSWORD here in the future
-    const SECRET_PASS = 'V@mper_123'; 
+    const SECRET_PASS = import.meta.env.VITE_ADMIN_PASSWORD; 
     
     if (passwordInput === SECRET_PASS) {
       setIsAuthenticated(true);
@@ -85,7 +86,7 @@ const AdminPage = () => {
     setQrCode(null);
 
     try {
-      const response = await axios.post('http://localhost:8080/api/admin/generate-ticket', {
+      const response = await axios.post(`${API_URL}/api/admin/generate-ticket`, {
         firstName,
         lastName
       });
@@ -104,17 +105,19 @@ const AdminPage = () => {
     }
   };
 
-  const handleViewOldQr = (ticketId) => {
-    const scannerUrl = `http://localhost:5173/scanner/${ticketId}`;
+const handleViewOldQr = (ticketId) => {
+    // Le QR code doit toujours pointer vers le vrai site en prod !
+    const domain = import.meta.env.PROD ? 'https://www.le-checkpoint.com' : 'http://localhost:5173';
+    const scannerUrl = `${domain}/scanner/${ticketId}`;
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(scannerUrl)}&color=9E1B1B&bgcolor=FFFFFF`;
     setQrCode(qrUrl);
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll back up to show the QR
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDeleteTicket = async (id, name) => {
     if (!window.confirm(`Êtes-vous sûr de vouloir supprimer le pass de ${name} ?`)) return;
     try {
-      const response = await axios.delete(`http://localhost:8080/api/admin/delete-ticket/${id}`);
+      const response = await axios.delete(`${API_URL}/api/admin/delete-ticket/${id}`);
       if (response.data.success) {
         setRecentTickets(recentTickets.filter(ticket => ticket.id !== id));
         setQrCode(null); 
@@ -129,7 +132,7 @@ const AdminPage = () => {
   const handleRestoreTicket = async (id, name) => {
     if (!window.confirm(`Voulez-vous vraiment restaurer le pass de ${name} ?`)) return;
     try {
-      const response = await axios.put(`http://localhost:8080/api/admin/restore-ticket/${id}`);
+      const response = await axios.put(`${API_URL}/api/admin/restore-ticket/${id}`);
       if (response.data.success) {
         fetchTrashTickets();  // Refresh trash
         fetchRecentTickets(); // Refresh main list
