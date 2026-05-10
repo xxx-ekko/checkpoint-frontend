@@ -5,6 +5,7 @@ import checkpointTheme from './theme';
 import LandingPage from './pages/LandingPage';
 import ScannerPage from './pages/ScannerPage';
 import MaintenancePage from './pages/MaintenancePage';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   return (
@@ -13,13 +14,19 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
-          {/* Main public page for users to buy tickets */}
+          {/* Public maintenance page (Coming Soon) on the root domain */}
           <Route path="/" element={<LandingPage />} />
+
+          <Route path="/admin-panel" element={<AdminPage />} />
+          
+          {/* Full landing page hidden for the client to review */}
           <Route path="/preprod" element={<MaintenancePage />} />
           
-          
-          {/* Hidden page for event staff to scan QR codes */}
+          {/* Standard manual access for event staff */}
           <Route path="/scanner" element={<ScannerPage />} />
+          
+          {/* Dynamic access when staff scans a QR code with their native camera */}
+          <Route path="/scanner/:ticketId" element={<ScannerPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

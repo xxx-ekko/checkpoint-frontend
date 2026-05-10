@@ -1,14 +1,13 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import basicSsl from '@vitejs/plugin-basic-ssl'
 
 export default defineConfig({
   plugins: [
-    react(),
-    basicSsl() // HTTPS for the frontend
+    react()
+    // Removed basicSsl() to disable forced HTTPS
   ],
   server: {
-    host: true,
+    // Removed host: true so it defaults to strict localhost
     proxy: {
       // Proxy all /api requests to your Node.js HTTP backend
       '/api': {
