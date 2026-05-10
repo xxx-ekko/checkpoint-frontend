@@ -1,24 +1,19 @@
 import React from 'react';
 import { Box, Container, Typography, Button } from '@mui/material';
 import { keyframes } from '@emotion/react';
-
-// Import the background image
 import heroBg from '../assets/images/hero-bg.PNG';
 
-// Simulates a breathing neon light bloom
 const neonPulse = keyframes`
   0% { box-shadow: 0 0 5px rgba(158, 27, 27, 0.2); }
   50% { box-shadow: 0 0 25px rgba(158, 27, 27, 0.6); }
   100% { box-shadow: 0 0 5px rgba(158, 27, 27, 0.2); }
 `;
 
-// Receive the onOpenModal prop to trigger the registration modal
-const Hero = ({ onOpenModal }) => {
-
-// Redirect user directly to the WhatsApp business number with a pre-filled message
+const Hero = () => {
+  
+  // La fameuse redirection WhatsApp avec le message pré-rempli
   const handleWhatsAppRedirect = () => {
-    // Replace with your actual WhatsApp link and message
-    const message = encodeURIComponent("Salut ! Je souhaite acheter un pass pour Le Checkpoint.");
+    const message = encodeURIComponent("Salut ! Je souhaite acheter un pass pour Le Checkpoint (5000 FCFA).");
     window.open(`https://wa.me/221778791567?text=${message}`, '_blank');
   };
 
@@ -44,17 +39,19 @@ const Hero = ({ onOpenModal }) => {
         <Typography variant="body1" sx={{ color: '#c6c6c7', maxWidth: 750, mx: 'auto', mb: 8, fontSize: '1.125rem' }}>
           Le point de rencontre incontournable de la communauté Otaku, Gaming et Pop Culture au Sénégal. Passez du digital au réel dans une ambiance immersive, chill et conviviale.
         </Typography>
+        
+        {/* Bouton mis à jour avec le prix et l'action WhatsApp */}
         <Button 
           variant="contained" 
-          color="primary" 
-          size="large" 
-          onClick={onOpenModal}
+          onClick={handleWhatsAppRedirect}
           sx={{ 
-            animation: `${neonPulse} 2.5s infinite`, borderRadius: 0, px: 5, py: 2, fontSize: '1.1rem',
+            backgroundColor: '#9E1B1B',
+            animation: `${neonPulse} 2.5s infinite`, 
+            borderRadius: 0, px: 5, py: 2, fontSize: '1.1rem',
             '&:hover': { animation: 'none', backgroundColor: '#fff', color: '#9E1B1B' } 
           }}
         >
-          ACHETER MON PASS
+          ACHETER MON PASS - 5000 FCFA
         </Button>
       </Container>
     </Box>

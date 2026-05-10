@@ -10,7 +10,7 @@ import Location from '../components/Location';
 import TransitionBanner from '../components/TransitionBanner';
 import Ticketing from '../components/Ticketing'; // <--- ADD THIS
 import Footer from '../components/Footer';
-import RegistrationModal from '../components/RegistrationModal';
+//import RegistrationModal from '../components/RegistrationModal';
 import ScrollToTop from '../components/ScrollToTop';
 
 const LandingPage = () => {
@@ -36,7 +36,7 @@ const LandingPage = () => {
 
       <Footer />
       <ScrollToTop />
-      <RegistrationModal isOpen={isModalOpen} onClose={handleModalClose} />
+      {/*<RegistrationModal isOpen={isModalOpen} onClose={handleModalClose} />*/}
 
     </Box>
   );
