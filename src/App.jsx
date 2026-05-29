@@ -6,6 +6,7 @@ import LandingPage from './pages/LandingPage';
 import ScannerPage from './pages/ScannerPage';
 import MaintenancePage from './pages/MaintenancePage';
 import AdminPage from './pages/AdminPage';
+import GalleryPage from './pages/GalleryPage';
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
           <Route path="/" element={<LandingPage />} />
 
           <Route path="/admin-panel" element={<AdminPage />} />
+          
+          {/* Gallery Page */}
+          <Route path="/galerie" element={<GalleryPage />} />
           
           {/* Full landing page hidden for the client to review */}
           <Route path="/preprod" element={<MaintenancePage />} />

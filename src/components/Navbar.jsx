@@ -1,9 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, Typography, Button, Box, Container } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   // State to handle navbar background transparency on scroll
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLogoClick = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleScrollTo = (id) => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 100);
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,7 +70,7 @@ const Navbar = () => {
               letterSpacing: '0.05em',
               cursor: 'pointer'
             }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={handleLogoClick}
           >
             LE <span style={{ color: '#9E1B1B' }}>CHECKPOINT</span>
           </Typography>
@@ -66,7 +87,7 @@ const Navbar = () => {
                 letterSpacing: '0.1em',
                 '&:hover': { color: '#9E1B1B' }
               }}
-              onClick={() => document.getElementById('program')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => handleScrollTo('program')}
             >
               PROGRAMME
             </Typography>
@@ -80,9 +101,26 @@ const Navbar = () => {
                 letterSpacing: '0.1em',
                 '&:hover': { color: '#9E1B1B' }
               }}
-              onClick={() => document.getElementById('arena')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => handleScrollTo('arena')}
             >
               LE SPOT
+            </Typography>
+
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                display: { xs: 'none', md: 'block' },
+                color: location.pathname === '/galerie' ? '#9E1B1B' : '#c6c6c7', 
+                cursor: 'pointer',
+                letterSpacing: '0.1em',
+                '&:hover': { color: '#9E1B1B' }
+              }}
+              onClick={() => {
+                navigate('/galerie');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
+              GALERIE
             </Typography>
 
             {/* Main Call to Action - Now redirects to WhatsApp */}
@@ -97,7 +135,8 @@ const Navbar = () => {
                 letterSpacing: '0.05em',
                 '&:hover': {
                   backgroundColor: '#9E1B1B',
-                  borderColor: '#9E1B1B'
+                  borderColor: '#9E1B1B',
+                  color: '#fff'
                 }
               }}
             >
